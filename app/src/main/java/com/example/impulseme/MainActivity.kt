@@ -1,31 +1,27 @@
 package com.example.impulseme
 
-import android.Manifest
-import android.content.pm.PackageManager
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationManagerCompat
-import com.example.impulseme.databinding.ActivityMainBinding
-import com.example.impulseme.services.NotificationServices
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
+class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val intent = Intent(this, ButtonsActivity::class.java)
+        startActivity(intent)
 
-        val service = NotificationServices(this, "notification_test")
-        var count = 0
-        binding.button.setOnClickListener {
-            service.createSimpleNotification(count++, "Recuerdame", "Solo tienes que entrar...")
-        }
+        finish()
     }
-
-
 }

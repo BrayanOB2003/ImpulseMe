@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ImpulseMe</string>
+    <string name="title_activity_buttons">ButtonsActivity</string>
 </resources>

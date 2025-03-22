@@ -5,13 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.impulseme.R
 
-class NotificationServices(
+class NotificationBuildServices(
     private val context: Context,
     private val channelId: String
 ) {
@@ -19,17 +20,7 @@ class NotificationServices(
         createNotificationChannel()
     }
 
-    private var builderSimpleNotification = NotificationCompat.Builder(context, channelId)
-        .setSmallIcon(R.drawable.ic_launcher_foreground)
-        .setContentTitle("My notification")
-        .setContentText("Notificación de prueba...")
-        .setStyle(
-            NotificationCompat.BigTextStyle()
-                .bigText("Notificación de prueba..."))
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-
     private fun createNotificationChannel() {
-
         val name = "simple_notification"
         val descriptionText = "A simple notification with text"
         val importance = NotificationManager.IMPORTANCE_HIGH
@@ -48,22 +39,49 @@ class NotificationServices(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
-        ){
+        ) {
             notificationManager
         } else {
+            Log.w("NotificationServices", "No permission for notifications")
             null
         }
     }
 
     fun createSimpleNotification(id: Int, title: String, content: String) {
         val notificationManager =  checkPermission()
-        builderSimpleNotification.setContentTitle(title)
-        builderSimpleNotification.setContentText(content)
-        builderSimpleNotification.setStyle(
-            NotificationCompat.BigTextStyle()
-                .bigText(content))
-
-        notificationManager?.notify(id, builderSimpleNotification.build())
+        val builderNotification = getNotificationBuilder()
+            .setContentTitle(title)
+            .setContentText(content)
+        notificationManager?.notify(id, builderNotification.build())
     }
 
+    fun createImageNotification(id: Int, title: String, content: String, image: Bitmap) {
+        val notificationManager =  checkPermission()
+        val builderNotification = getNotificationBuilder()
+            .setContentTitle(title)
+            .setContentText(content)
+            .setLargeIcon(image)
+            .setStyle(
+                NotificationCompat.BigPictureStyle()
+                    .bigPicture(image)
+                    .bigLargeIcon(null as Bitmap?))
+        notificationManager?.notify(id, builderNotification.build())
+    }
+
+    fun createLargeTextNotification(id: Int, title: String, content: String) {
+        val notificationManager =  checkPermission()
+        val builderNotification = getNotificationBuilder()
+            .setContentTitle(title)
+            .setContentText(content)
+            .setStyle(
+                NotificationCompat.BigTextStyle()
+                    .bigText(content))
+        notificationManager?.notify(id, builderNotification.build())
+    }
+
+    private fun getNotificationBuilder(): NotificationCompat.Builder {
+        return NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+    }
 }
