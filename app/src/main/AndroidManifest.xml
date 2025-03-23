@@ -21,11 +21,6 @@
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.ImpulseMe" />
         <activity
-            android:name=".ui.theme.HomeLayout"
-            android:exported="false"
-            android:label="@string/title_activity_home_layout"
-            android:theme="@style/Theme.ImpulseMe" />
-        <activity
             android:name=".ButtonsActivity"
             android:exported="false"
             android:label="@string/title_activity_buttons"
