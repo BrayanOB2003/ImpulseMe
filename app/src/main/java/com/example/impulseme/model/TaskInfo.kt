@@ -5,5 +5,5 @@ data class TaskInfo(
     val title: String,
     val description: String,
     val date: String,
-    val hour: String,
+    val time: String,
     )

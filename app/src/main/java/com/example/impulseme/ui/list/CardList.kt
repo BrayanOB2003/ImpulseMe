@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.impulseme.model.TaskInfo
 
 @Composable
-fun CardList(cardItems: List<TaskInfo>) {
+fun CardList(cardItems: List<TaskInfo>, onDelete: (id: Int) -> Unit) {
     LazyColumn (
         modifier = Modifier.fillMaxSize()
     ) {
@@ -38,8 +38,8 @@ fun CardList(cardItems: List<TaskInfo>) {
                 title = item.title,
                 description = item.description,
                 date = item.date,
-                hour = item.hour,
-                onDelete = {}
+                hour = item.time,
+                onDelete = { onDelete(item.id) }
             )
         }
     }
@@ -60,8 +60,8 @@ fun CardItem(
         ),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-            .height(90.dp),
+            .padding(horizontal = 10.dp, vertical = 8.dp)
+            .height(110.dp),
         shape = MaterialTheme.shapes.medium
     ) {
         Row(
