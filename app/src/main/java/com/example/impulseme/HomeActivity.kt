@@ -19,10 +19,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.impulseme.model.TaskInfo
+import com.example.impulseme.ui.TaskForm
 import com.example.impulseme.ui.list.CardList
 import com.example.impulseme.ui.theme.ImpulseMeTheme
 import com.example.impulseme.viewModel.TaskViewModel
@@ -45,7 +50,8 @@ class HomeActivity : ComponentActivity() {
 @Composable
 fun HomeScreen(taskViewModel: TaskViewModel = hiltViewModel()) {
 
-    val task = taskViewModel.reminders.collectAsState()
+    val task by taskViewModel.reminders.collectAsState()
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -65,13 +71,14 @@ fun HomeScreen(taskViewModel: TaskViewModel = hiltViewModel()) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
+            FloatingActionButton(onClick = { taskViewModel.showTaskForm() }) {
                 Icon(Icons.Default.Add, contentDescription = "Add")
             }
         }
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            CardList(cardItems = task.value, onDelete = { id -> taskViewModel.deleteReminder(id) })
+            CardList(cardItems = task, onDelete = { id -> taskViewModel.deleteReminder(id) })
+            TaskForm()
         }
     }
 }

@@ -41,48 +41,6 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
                     date = "2022-12-31",
                     time = "12:00",
                 ),
-                TaskInfo(
-                    id = 5,
-                    title = "Recordatorio 5",
-                    description = "Descripción del recordatorio 5",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
-                TaskInfo(
-                    id = 6,
-                    title = "Recordatorio 6",
-                    description = "Descripción del recordatorio 6",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
-                TaskInfo(
-                    id = 7,
-                    title = "Recordatorio 7",
-                    description = "Descripción del recordatorio 7",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
-                TaskInfo(
-                    id = 8,
-                    title = "Recordatorio 8",
-                    description = "Descripción del recordatorio 8",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
-                TaskInfo(
-                    id = 9,
-                    title = "Recordatorio 9",
-                    description = "Descripción del recordatorio 9",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
-                TaskInfo(
-                    id = 10,
-                    title = "Recordatorio 10",
-                    description = "Descripción del recordatorio 10",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
             )
         )
     }
