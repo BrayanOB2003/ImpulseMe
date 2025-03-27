@@ -18,7 +18,6 @@ import java.util.Calendar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DialTimePicker(
-    showTimePicker: Boolean,
     onConfirm: (TimePickerState) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -30,13 +29,11 @@ fun DialTimePicker(
         is24Hour = true,
     )
 
-    if(showTimePicker) {
-        Column {
-            TimePickerDialog(onDismiss = { onDismiss() }, onConfirm = { onConfirm(timePickerState) }) {
-                TimePicker(
-                    state = timePickerState,
-                )
-            }
+    Column {
+        TimePickerDialog(onDismiss = { onDismiss() }, onConfirm = { onConfirm(timePickerState) }) {
+            TimePicker(
+                state = timePickerState,
+            )
         }
     }
 }
