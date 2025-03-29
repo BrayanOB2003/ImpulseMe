@@ -28,6 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.impulseme.model.TaskInfo
 import com.example.impulseme.ui.TaskForm
+import com.example.impulseme.ui.TaskFormDialog
 import com.example.impulseme.ui.list.CardList
 import com.example.impulseme.ui.theme.ImpulseMeTheme
 import com.example.impulseme.viewModel.TaskViewModel
@@ -51,8 +52,7 @@ class HomeActivity : ComponentActivity() {
 fun HomeScreen(taskViewModel: TaskViewModel = hiltViewModel()) {
 
     val task by taskViewModel.reminders.collectAsState()
-
-
+    val showTaskForm by taskViewModel.showTaskForm.collectAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -78,7 +78,9 @@ fun HomeScreen(taskViewModel: TaskViewModel = hiltViewModel()) {
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             CardList(cardItems = task, onDelete = { id -> taskViewModel.deleteReminder(id) })
-            TaskForm()
+            if(showTaskForm){
+                TaskFormDialog()
+            }
         }
     }
 }

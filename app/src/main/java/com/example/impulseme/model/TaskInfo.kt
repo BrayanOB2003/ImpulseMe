@@ -4,6 +4,9 @@ data class TaskInfo(
     val id: Int,
     val title: String,
     val description: String,
-    val date: String,
-    val time: String,
+    val dateStart: String,
+    val dateEnd: String,
+    val timeStart: String,
+    val timeEnd: String,
+    val priority: EnumPriorityTask,
     )

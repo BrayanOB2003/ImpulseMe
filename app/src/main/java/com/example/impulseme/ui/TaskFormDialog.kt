@@ -1,38 +1,35 @@
 package com.example.impulseme.ui
 
+import android.provider.CalendarContract.Colors
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,62 +37,99 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.impulseme.R
+import com.example.impulseme.model.EnumPriorityTask
 import com.example.impulseme.model.TaskInfo
+import com.example.impulseme.utils.fromLocalDateToString
+import com.example.impulseme.utils.fromLocalTimeToString
+import com.example.impulseme.utils.getDateFormatted
+import com.example.impulseme.utils.getTimeFormatted
 import com.example.impulseme.viewModel.TaskViewModel
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 
 @Composable
 fun TaskFormDialog(taskViewModel: TaskViewModel = hiltViewModel()){
     val showForm: Boolean by taskViewModel.showTaskForm.collectAsState()
+    var title = remember { mutableStateOf("") }
+    var description = remember { mutableStateOf("") }
 
-    if(showForm){
-        TaskDialog(
-            onConfirm = {
-                //taskViewModel.addReminder(TaskInfo((0..1000).random(), title, description, "", time))
+    var showDatePicker = remember { mutableStateOf(false) }
+    var startDate = remember { mutableStateOf(LocalDate.now()) }
+    var endDate = remember { mutableStateOf(LocalDate.now()) }
+    var dateSelected = remember { mutableStateOf("") } //START DATE - END DATE
+
+    var showTimePicker = remember { mutableStateOf(false) }
+    var startTime = remember { mutableStateOf(LocalTime.now()) }
+    var endTime = remember { mutableStateOf(LocalTime.now().plusHours(1) )}
+    var timeSelected = remember { mutableStateOf("") } //START TIME - END TIME
+
+    var priority = remember { mutableStateOf(EnumPriorityTask.NEUTRAL.value) }
+    var isAllDay = remember { mutableStateOf( false ) }
+
+    var priorityExpanded = remember { mutableStateOf(false) }
+
+    fun canCreateTask(): Boolean {
+        return title.value.isNotEmpty() && description.value.isNotEmpty()
+    }
+
+    TaskDialog(
+        onConfirm = {
+            if (canCreateTask()){
+                taskViewModel.addReminder(TaskInfo(
+                    id = (0..10000).random(),
+                    title = title.value,
+                    description = description.value,
+                    dateStart = fromLocalDateToString(startDate.value),
+                    dateEnd = fromLocalDateToString(endDate.value),
+                    timeStart = fromLocalTimeToString(startTime.value),
+                    timeEnd = fromLocalTimeToString(endTime.value),
+                    priority = EnumPriorityTask.fromValueToObject(priority.value)
+                ))
                 taskViewModel.hideTaskForm()
-            },
-            onDismiss = { taskViewModel.hideTaskForm() }
-        ){
-            TaskForm()
-        }
+            }
+        },
+        onDismiss = { taskViewModel.hideTaskForm() }
+    ){
+        TaskForm(title, description,
+            startDate, endDate,
+            startTime, endTime,
+            isAllDay, priority,
+            showDatePicker, showTimePicker,
+            dateSelected, timeSelected,
+            priorityExpanded
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun TaskForm() {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+fun TaskForm(title: MutableState<String>,
+             description: MutableState<String>,
+             startDate: MutableState<LocalDate>,
+             endDate: MutableState<LocalDate>,
+             startTime: MutableState<LocalTime>,
+             endTime: MutableState<LocalTime>,
+             isAllDay: MutableState<Boolean>,
+             priority: MutableState<String>,
+             showDatePicker: MutableState<Boolean>,
+             showTimePicker: MutableState<Boolean>,
+             dateSelected: MutableState<String>,
+             timeSelected: MutableState<String>,
+             priorityExpanded: MutableState<Boolean>) {
 
-    var showDatePicker by remember { mutableStateOf(false) }
-    var startDate by remember { mutableStateOf(LocalDate.now()) }
-    var endDate by remember { mutableStateOf(LocalDate.now()) }
-    var dateSelected by remember { mutableStateOf("") } //START DATE - END DATE
-
-    var showTimePicker by remember { mutableStateOf(false) }
-    var startTime by remember { mutableStateOf(LocalTime.now()) }
-    var endTime by remember { mutableStateOf(LocalTime.now().plusHours(1) )}
-    var timeSelected by remember { mutableStateOf("") } //START TIME - END TIME
-
-    var priority by remember { mutableStateOf("Media") }
-    var reminderEnabled by remember { mutableStateOf(false) }
-
-    fun getDateFormatted(date: LocalDate): String {
-        return DateTimeFormatter.ofPattern("EEEE, dd MMM").format(date)
-    }
-
-    fun getTimeFormatted(date: LocalTime): String {
-        return DateTimeFormatter.ofPattern("hh:mm a").format(date)
+    fun getPriorityColor(priority: String): Color {
+        return EnumPriorityTask.fromValueToColor(priority)
     }
 
     Column(
@@ -106,8 +140,8 @@ fun TaskForm() {
     ) {
         // Título
         OutlinedTextField(
-            value = title,
-            onValueChange = { title = it },
+            value = title.value,
+            onValueChange = { title.value = it },
             label = { Text("Título") },
             placeholder = { Text("Ejemplo: Reunión de equipo") },
             modifier = Modifier.fillMaxWidth(),
@@ -116,6 +150,32 @@ fun TaskForm() {
                 Icon(imageVector = Icons.Default.Edit, contentDescription = "Título")
             }
         )
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.schedule_24dp_1f1f1f_fill0_wght400_grad0_opsz24),
+                    contentDescription = "Todo el día",
+                    tint = Color.Gray,
+                )
+                Text(
+                    text="Todo el día",
+                    color = Color.Gray,
+                )
+            }
+
+            Switch(
+                checked = isAllDay.value,
+                onCheckedChange = { isAllDay.value = it },
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
         // Fecha
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -123,26 +183,28 @@ fun TaskForm() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = getDateFormatted(startDate),
+                text = getDateFormatted(startDate.value),
                 color = Color.Gray,
                 modifier = Modifier.clickable(
                     onClick = {
-                        showDatePicker = true
-                        dateSelected = "START DATE"
+                        showDatePicker.value = true
+                        dateSelected.value = "START DATE"
                     }
                 )
             )
-            Text(
-                text = getTimeFormatted(startTime),
-                color = Color.Gray,
-                modifier = Modifier.clickable(
-                    onClick = {
-                        showTimePicker = true
-                        timeSelected = "START TIME"
+            if(!isAllDay.value){
+                Text(
+                    text = getTimeFormatted(startTime.value),
+                    color = Color.Gray,
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            showTimePicker.value = true
+                            timeSelected.value = "START TIME"
 
-                    }
+                        }
+                    )
                 )
-            )
+            }
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -150,56 +212,66 @@ fun TaskForm() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = getDateFormatted(endDate),
+                text = getDateFormatted(endDate.value),
                 color = Color.Gray,
                 modifier = Modifier.clickable(
                     onClick = {
-                        showDatePicker = true
-                        dateSelected = "END DATE"
+                        showDatePicker.value = true
+                        dateSelected.value = "END DATE"
                     }
                 )
+            )
+            if(!isAllDay.value){
+                Text(
+                    text = getTimeFormatted(endTime.value),
+                    color = Color.Gray,
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            showTimePicker.value = true
+                            timeSelected.value = "END TIME"
+                        }
+                    )
+                )
+            }
+        }
+
+        //Prioridad
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.clickable(
+                onClick = { priorityExpanded.value = true }
+            ),
+        ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(R.drawable.label_important_24dp_1f1f1f_fill1_wght400_grad0_opsz24),
+                contentDescription = "Prioridad",
+                tint = getPriorityColor(priority.value),
             )
             Text(
-                text = getTimeFormatted(endTime),
+                text = priority.value,
                 color = Color.Gray,
-                modifier = Modifier.clickable(
-                    onClick = {
-                        showTimePicker = true
-                        timeSelected = "END TIME"
-                    }
-                )
+                modifier = Modifier
+                    .background(Color.Transparent)
+                    .padding(8.dp)
             )
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Prioridad")
             DropdownMenu(
-                expanded = false, // Aquí puedes controlar su apertura
-                onDismissRequest = {},
+                expanded = priorityExpanded.value,
+                onDismissRequest = { priorityExpanded.value = false },
             ) {
-                listOf("Baja", "Media", "Alta").forEach {
-                    DropdownMenuItem(text = { Text(it) }, onClick = { priority = it })
+                EnumPriorityTask.getEntries().forEach { it ->
+                    DropdownMenuItem(
+                        text = { Text(it) },
+                        onClick = {
+                            priority.value = it
+                            priorityExpanded.value = false
+                        })
                 }
             }
         }
-        // Recordatorio
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Checkbox(
-                checked = reminderEnabled,
-                onCheckedChange = { reminderEnabled = it }
-            )
-            Text("Agregar recordatorio")
-        }
         // Descripción
         OutlinedTextField(
-            value = description,
-            onValueChange = { description = it },
+            value = description.value,
+            onValueChange = { description.value = it },
             label = { Text("Descripción") },
             placeholder = { Text("Ejemplo: Discutir avances del proyecto") },
             modifier = Modifier.fillMaxWidth(),
@@ -208,24 +280,11 @@ fun TaskForm() {
                 Icon(imageVector = Icons.Default.Menu, contentDescription = "Descripción")
             }
         )
-        // Botón de Confirmación
-        Button(
-            onClick = { /* Acción para guardar la tarea */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary
-            )
-        ) {
-            Text("Crear Tarea")
-        }
-
     }
     // Selectores de Fecha y Hora
-    if (showDatePicker) {
+    if (showDatePicker.value) {
         DatePickerDialog(
-            onDismissRequest = { showDatePicker = false },
+            onDismissRequest = { showDatePicker.value = false },
             confirmButton = { },
             modifier = TODO(),
             dismissButton = TODO(),
@@ -237,17 +296,17 @@ fun TaskForm() {
         )
     }
 
-    if (showTimePicker) {
+    if (showTimePicker.value) {
         DialTimePicker(
             onConfirm = { time ->
-                if(timeSelected == "START TIME"){
-                    startTime = LocalTime.of(time.hour, time.minute)
-                } else if (timeSelected == "END TIME"){
-                    endTime = LocalTime.of(time.hour, time.minute)
+                if(timeSelected.value == "START TIME"){
+                    startTime.value = LocalTime.of(time.hour, time.minute)
+                } else if (timeSelected.value == "END TIME"){
+                    endTime.value = LocalTime.of(time.hour, time.minute)
                 }
-                showTimePicker = false
+                showTimePicker.value = false
             },
-            onDismiss = { showTimePicker = false }
+            onDismiss = { showTimePicker.value = false }
         )
     }
 }
@@ -260,14 +319,17 @@ fun TaskDialog(
 ){
     AlertDialog(
         onDismissRequest = onDismiss,
-        dismissButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text("Dismiss")
-            }
-        },
         confirmButton = {
-            TextButton(onClick = { onConfirm() }) {
-                Text("OK")
+            Button(
+                onClick = { onConfirm() },
+                modifier = Modifier
+                    .height(50.dp)
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            ) {
+                Text("Crear Evento")
             }
         },
         text = { content() }

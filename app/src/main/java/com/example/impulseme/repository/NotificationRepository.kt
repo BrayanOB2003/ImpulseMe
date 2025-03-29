@@ -1,5 +1,6 @@
 package com.example.impulseme.repository
 
+import com.example.impulseme.model.EnumPriorityTask
 import com.example.impulseme.model.TaskInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,32 +16,44 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
             listOf(
                 TaskInfo(
                     id = 1,
-                    title = "Recordatorio 1",
-                    description = "Descripción del recordatorio 1",
-                    date = "2022-12-31",
-                    time = "12:00",
+                    title = "Revisión de código",
+                    description = "Revisar el PR del módulo de autenticación",
+                    dateStart = "2025-03-28",
+                    dateEnd = "2025-03-28",
+                    timeStart = "10:00",
+                    timeEnd = "11:00",
+                    priority = EnumPriorityTask.fromValueToObject("Crítica")
                 ),
                 TaskInfo(
                     id = 2,
-                    title = "Recordatorio 2",
-                    description = "Descripción del recordatorio 2",
-                    date = "2022-12-31",
-                    time = "12:00",
+                    title = "Diseño de interfaz",
+                    description = "Crear wireframes para la nueva pantalla de configuración",
+                    dateStart = "2025-03-29",
+                    dateEnd = "2025-03-29",
+                    timeStart = "14:00",
+                    timeEnd = "16:00",
+                    priority = EnumPriorityTask.fromValueToObject("Importante")
                 ),
                 TaskInfo(
                     id = 3,
-                    title = "Recordatorio 3",
-                    description = "Descripción del recordatorio 3",
-                    date = "2022-12-31",
-                    time = "12:00",
+                    title = "Llamada con cliente",
+                    description = "Reunión con el equipo legal para discutir requisitos de la app",
+                    dateStart = "2025-03-30",
+                    dateEnd = "2025-03-30",
+                    timeStart = "09:00",
+                    timeEnd = "10:00",
+                    priority = EnumPriorityTask.fromValueToObject("Neutral")
                 ),
                 TaskInfo(
                     id = 4,
-                    title = "Recordatorio 4",
-                    description = "Descripción del recordatorio 4",
-                    date = "2022-12-31",
-                    time = "12:00",
-                ),
+                    title = "Escribir documentación",
+                    description = "Actualizar la documentación del API en Notion",
+                    dateStart = "2025-04-01",
+                    dateEnd = "2025-04-01",
+                    timeStart = "15:00",
+                    timeEnd = "17:00",
+                    priority = EnumPriorityTask.fromValueToObject("Opcional")
+                )
             )
         )
     }
