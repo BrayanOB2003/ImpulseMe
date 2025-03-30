@@ -49,13 +49,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.impulseme.R
 import com.example.impulseme.model.EnumPriorityTask
 import com.example.impulseme.model.TaskInfo
+import com.example.impulseme.ui.DateTimePickers.DialDatePicker
 import com.example.impulseme.utils.fromLocalDateToString
 import com.example.impulseme.utils.fromLocalTimeToString
+import com.example.impulseme.utils.fromTimestampToLocalDate
 import com.example.impulseme.utils.getDateFormatted
 import com.example.impulseme.utils.getTimeFormatted
 import com.example.impulseme.viewModel.TaskViewModel
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
@@ -281,18 +285,19 @@ fun TaskForm(title: MutableState<String>,
             }
         )
     }
+
     // Selectores de Fecha y Hora
     if (showDatePicker.value) {
-        DatePickerDialog(
-            onDismissRequest = { showDatePicker.value = false },
-            confirmButton = { },
-            modifier = TODO(),
-            dismissButton = TODO(),
-            shape = TODO(),
-            tonalElevation = TODO(),
-            colors = TODO(),
-            properties = TODO(),
-            content = TODO()
+        DialDatePicker(
+            onDateSelected = { date ->
+                if(dateSelected.value == "START DATE"){
+                    startDate.value = fromTimestampToLocalDate(date!!)
+                } else if (dateSelected.value == "END DATE"){
+                    endDate.value = fromTimestampToLocalDate(date!!)
+                }
+                showDatePicker.value = false
+            },
+            onDismiss = { showDatePicker.value = false }
         )
     }
 
