@@ -8,5 +8,6 @@ data class TaskInfo(
     val dateEnd: String,
     val timeStart: String,
     val timeEnd: String,
+    val isAllDay: Boolean,
     val priority: EnumPriorityTask,
     )

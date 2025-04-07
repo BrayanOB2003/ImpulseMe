@@ -22,6 +22,7 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
                     dateEnd = "2025-03-28",
                     timeStart = "10:00",
                     timeEnd = "11:00",
+                    isAllDay = false,
                     priority = EnumPriorityTask.fromValueToObject("Crítica")
                 ),
                 TaskInfo(
@@ -32,6 +33,7 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
                     dateEnd = "2025-03-29",
                     timeStart = "14:00",
                     timeEnd = "16:00",
+                    isAllDay = false,
                     priority = EnumPriorityTask.fromValueToObject("Importante")
                 ),
                 TaskInfo(
@@ -42,6 +44,7 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
                     dateEnd = "2025-03-30",
                     timeStart = "09:00",
                     timeEnd = "10:00",
+                    isAllDay = true,
                     priority = EnumPriorityTask.fromValueToObject("Neutral")
                 ),
                 TaskInfo(
@@ -52,6 +55,7 @@ class FakeReminderRepository @Inject constructor() : ReminderRepository {
                     dateEnd = "2025-04-01",
                     timeStart = "15:00",
                     timeEnd = "17:00",
+                    isAllDay = false,
                     priority = EnumPriorityTask.fromValueToObject("Opcional")
                 )
             )

@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val intent = Intent(this, HomeActivity::class.java)
+        val intent = Intent(this, FormActivity::class.java)
         startActivity(intent)
 
         finish()

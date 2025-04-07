@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "365714872461",
+    "project_id": "impulseme-82af7",
+    "storage_bucket": "impulseme-82af7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:365714872461:android:a9bd9bbf1c8a6feb8feac4",
+        "android_client_info": {
+          "package_name": "com.example.impulseme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAc0nLF9h_xW5KAwNpRtnlWYPPqdl0nbxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
